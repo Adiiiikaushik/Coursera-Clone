@@ -1,8 +1,10 @@
 const express = require("express")
 const Router = express.Router
-const { adminModel } = require("../db.js")
+const { adminModel, courseModel } = require("../db.js")
 const jwt = require("jsonwebtoken")
-const JWT_USER_PASSWORD = "JjkahsdGSD12"
+const { JWT_ADMIN_PASSWORD } = require("../config.js")
+const { adminMiddleware } = require("../middlewares/admin.js")
+
 
 const adminRouter = Router();
 
@@ -31,7 +33,7 @@ adminRouter.post("/signin", async(req,res)=>{
     if (user) {
         const token = jwt.sign({
             id: user._id
-        },JWT_USER_PASSWORD);
+        },JWT_ADMIN_PASSWORD);
         
         res.json({
             token: token,
@@ -46,21 +48,54 @@ adminRouter.post("/signin", async(req,res)=>{
     
 })
 
-adminRouter.post("/course",(req,res)=>{
+adminRouter.post("/course", adminMiddleware, async(req,res)=>{
+    const adminId = req.userId;
+
+    const course = const { title, description, imageUrl, price, creatorId } = req.body;
+    await courseModel.create({
+        title,
+        description,
+        imageUrl,
+        price,
+        creatorId,
+    })
+    
     res.json({
-        message: "make course end point"
+        message: "course created"
+        courseId: course._id
     })
 })
 
-adminRouter.put("/course",(req,res)=>{
+adminRouter.put("/course", adminMiddleware, async(req,res)=>{
+    const adminId = req.userId;
+
+    const { title, description, imageUrl, price, courseId } = req.body;
+    const course = const { title, description, imageUrl, price, creatorId } = req.body;
+    await courseModel.updateOne({
+        _id: courseId,
+        creatorId: adminId
+    },   
+    {
+        title,
+        description,
+        imageUrl,
+        price,
+        creatorId,
+    })
     res.json({
-        message: "put end point"
+        message: "course updated"
+        courseId: course._id
     })
 })
 
-adminRouter.get("/course/bulk",(req,res)=>{
+adminRouter.get("/course/bulk", adminMiddleware, async(req,res)=>{
+    const adminId = req.userId;
+
+    const courses = await courseModel.find({
+        creatorId: adminId,
+    })
     res.json({
-        message: "bulk end point"
+        courses
     })
 })
 
