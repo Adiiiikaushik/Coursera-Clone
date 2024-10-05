@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
-console.log("DB Connected")
-mongoose.connect("mongodb+srv://adityakaushik1801:9MgdDEDp6d6xnqbx@cluster0.yaubo.mongodb.net/coursera-clone")
+mongoose.connect("mongodb+srv://adityakaushik1801:9MgdDEDp6d6xnqbx@cluster0.yaubo.mongodb.net/coursera-clone").then(console.log("DB Connected"))
 const ObjectId = mongoose.Types.ObjectId
 const Schema = mongoose.Schema
 
