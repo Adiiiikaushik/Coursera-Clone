@@ -3,7 +3,7 @@ const { JWT_ADMIN_PASSWORD } = require("../config.js")
 
 function adminMiddleware(req,res,next) {
     const token = req.headers.token;
-    const decoded = jwt.verify(jwt,JWT_ADMIN_PASSWORD);
+    const decoded = jwt.verify(token,JWT_ADMIN_PASSWORD);
 
     if(decoded){
         req.userId = decoded.id;
@@ -17,5 +17,7 @@ function adminMiddleware(req,res,next) {
 }
 
 module.exports = {
-    adminMiddleware: adminMiddleware;
+    adminMiddleware: adminMiddleware
 }
+
+// Streak Commits
